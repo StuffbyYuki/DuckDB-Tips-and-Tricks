@@ -3,10 +3,13 @@ import polars as pl
 import pyarrow as pa
 import duckdb
 
+data = {'ID': [1,2,3,4,5], 'Name': ['Microsoft', 'Apple', 'Netflix', 'Spotify', 'Intel']}
 
+##################
 ##### polars #####
+##################
 # duckdb on polars dataframe
-pl_df = pl.DataFrame({'ID': [1,2,3,4,5], 'Name': ['Microsoft', 'Apple', 'Netflix', 'Spotify', 'Intel']})
+pl_df = pl.DataFrame(data)
 rel = duckdb.sql('select * from pl_df')
 print('\nDuckDB relation from Polars df: \n', rel, type(rel))
 
@@ -14,9 +17,11 @@ print('\nDuckDB relation from Polars df: \n', rel, type(rel))
 pl_df_from_duckdb = rel.pl()
 print('\nPolars df from DuckDB: \n', type(pl_df_from_duckdb))
 
+##################
 ##### pandas #####
+##################
 # duckdb on pandas dataframe - pandas to duckdb
-df = pl_df.to_pandas()
+df = pd.DataFrame(data)
 rel = duckdb.sql('select * from df')
 print('\nDuckDB relation from Pandas df: \n', rel, type(rel))
 
@@ -24,9 +29,11 @@ print('\nDuckDB relation from Pandas df: \n', rel, type(rel))
 df_from_duckdb = rel.df()
 print('\nPandas df from DuckDB: \n', type(df_from_duckdb))
 
+#################
 ##### arrow #####
+#################
 # duckdb on arrow table - arrow to duckdb
-arrow = pl_df.to_arrow()
+arrow = pa.Table.from_pydict(data)
 rel = duckdb.sql('select * from arrow')
 print('\nDuckDB relation from Arrow table: \n', rel, type(rel))
 
